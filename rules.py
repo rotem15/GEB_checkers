@@ -34,6 +34,15 @@ def between(sqr1, sqr2, sqr3):  # whether sqr3 is between sqr1 and sqr2
     return False
 
 
+def enemies(sqr1, sqr2):
+    if sqr1.piece is not None and sqr2.piece is not None:
+        return sqr1.piece.color * sqr2.piece.color == -1
+
+
+def enemies_between(sqr1, sqr2, brd):
+    return [sqr for sqr in brd.all_squares if between(sqr1, sqr2, sqr) and enemies(sqr1, sqr)]
+
+
 def pieces_in_row(row, brd):
     pieces = [sqr.piece for sqr in brd.squares[row] if sqr.piece is not None]
     return len(pieces)
@@ -52,8 +61,7 @@ def eating_move(sqr1, sqr2, brd):
     if sqr2.piece is None:
         if is_higher_than(sqr1, sqr2) * sqr1.piece.color == -1:  # if the higher piece is black
             if distance(sqr1, sqr2) <= step_size + 1 and direction(sqr1, sqr2) == direc:
-                betweens =[sqr for sqr in brd.all_squares() if between(sqr1, sqr2, sqr)]
-                if any([sqr.piece.color * sqr1.piece.color == -1 for sqr in betweens if sqr.piece is not None]):
+                if enemies_between(sqr1, sqr2, brd):
                     return True
     return False
 
@@ -61,9 +69,9 @@ def eating_move(sqr1, sqr2, brd):
 def legal_moves_2(sqr1, brd):
     normal_moves = [sqr for sqr in brd.all_squares() if normal_move(sqr1, sqr)]
     eating_moves = [sqr for sqr in brd.all_squares() if eating_move(sqr1, sqr, brd)]
-    return normal_moves, eating_moves
+    return normal_moves + eating_moves
 
-
+'''
 rules = {'dist': lambda sqr1, sqr2: step_size == distance(sqr1, sqr2),
          'direc': lambda sqr1, sqr2: direc == direction(sqr1, sqr2),
          'forward': lambda sqr1, sqr2: is_higher_than(sqr1, sqr2) != sqr1.piece.color
@@ -80,3 +88,4 @@ def legal_move(sqr1, sqr2):
             is_legal = False
             break
     return is_legal
+'''

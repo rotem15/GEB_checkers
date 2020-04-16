@@ -1,7 +1,8 @@
-import drawings
+import rules, drawings
 
 
-def move_piece(sqr1, sqr2):
+def move_piece(sqr1, sqr2): # also eats any enemies in between
     sqr2.piece = sqr1.piece
     sqr1.piece = None
-    # drawings.draw_square(sqr1)
+    for sqr in rules.enemies_between(sqr1, sqr2):
+        sqr.piece = None

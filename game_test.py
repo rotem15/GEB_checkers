@@ -51,8 +51,7 @@ while run:
                         chosen_sqr = b.clicked_sqr(pos)
 
             # list all the legal places for the piece in the chosen square
-            normal_moves, eating_moves = rules.legal_moves_2(chosen_sqr, b)
-
+            legal_squares_to_move = rules.legal_moves_2(chosen_sqr, b)
 
             drawings.update_gui(win, boards, chosen_sqr, legal_squares_to_move)
     pygame.display.update()
