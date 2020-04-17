@@ -4,7 +4,7 @@ pygame.init()
 pygame.display.set_caption("Super checkers")
 
 NUM_OF_BOARDS = 1
-BOARD_SIZE = 800
+BOARD_SIZE = 600
 
 
 def build_boards(howmany, size):
@@ -33,13 +33,13 @@ while run:
             run = False
         if event.type == pygame.MOUSEBUTTONUP:
             pos = pygame.mouse.get_pos()
-            print(chosen_sqr.pos)
+            #print(chosen_sqr.pos)
 
             # If a legal squares to move has been clicked, move the according piece and change the turn.
             # The legal_squares_to_move and chosen_sqr were set in the previous loop.
             for sqr in legal_squares_to_move:
                 if sqr.in_square(pos):
-                    actions.move_piece(chosen_sqr, sqr)
+                    actions.move_piece(chosen_sqr, sqr, b)
                     chosen_sqr, legal_squares_to_move = no_sqr_chosen
                     turn *= (-1)
                     continue
