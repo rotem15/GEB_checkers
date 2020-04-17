@@ -1,10 +1,10 @@
 # parameters
-step_size = 1 # 5 - pieces_in_row(7, brd_2)
+step_size = 1  # 5 - pieces_in_row(7, brd_2)
 direc = 'diagonal'
 go_back = False
 add_piece = False
-rotate_board = False # queen_is_born
-num_of_moves = 1 # sqrt(middle_rows + 1)
+rotate_board = False  # queen_is_born
+num_of_moves = 1  # sqrt(middle_rows + 1)
 
 
 # measuring functions
