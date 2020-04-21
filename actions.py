@@ -1,7 +1,8 @@
-import drawings
+import measuring
 
 
-def move_piece(sqr1, sqr2):
-    sqr2.piece = sqr1.piece
-    sqr1.piece = None
-    # drawings.draw_square(sqr1)
+def move_piece(orig, dest, brd):  # also eats any enemies in between
+    for sqr in measuring.enemies_between(orig, dest, brd):
+        sqr.piece = None
+    dest.piece = orig.piece
+    orig.piece = None

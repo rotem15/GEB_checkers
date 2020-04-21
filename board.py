@@ -2,7 +2,7 @@ import piece, square
 
 
 class Board:
-    def __init__(self, size, top_left, name='game'):
+    def __init__(self, size=100, top_left=(0, 0), name='game'):
         self.name = name
         self.size = size
         self.top_left = top_left

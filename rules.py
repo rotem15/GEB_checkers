@@ -1,82 +1,28 @@
-# parameters
-step_size = 1 # 5 - pieces_in_row(7, brd_2)
-direc = 'diagonal'
-go_back = False
-add_piece = False
-rotate_board = False # queen_is_born
-num_of_moves = 1 # sqrt(middle_rows + 1)
-
-
-# measuring functions
-def distance(sqr1, sqr2):
-    return max(abs(sqr1.pos[0]-sqr2.pos[0]), abs(sqr1.pos[1]-sqr2.pos[1]))
-
-
-def direction(sqr1, sqr2):
-    if sqr1.pos[0] == sqr2.pos[0] or sqr1.pos[1] == sqr2.pos[1]:
-        return 'straight'
-    if ((sqr1.pos[0]-sqr2.pos[0]) / (sqr1.pos[1]-sqr2.pos[1])) **2 == 1:
-        return 'diagonal'
-
-
-def is_higher_than(sqr1, sqr2):
-    if sqr1.pos[0] < sqr2.pos[0]:
-        return 1
-    return -1
-
-
-def between(sqr1, sqr2, sqr3):  # whether sqr3 is between sqr1 and sqr2
-    if direction(sqr1, sqr2) == direction(sqr1, sqr3) and direction(sqr1, sqr2) is not None:
-        print(1)
-        if ((sqr3.pos[0] - sqr1.pos[0]) * (sqr3.pos[0] - sqr2.pos[0])) < 1 \
-                        and ((sqr3.pos[1] - sqr1.pos[1]) * (sqr3.pos[1] - sqr2.pos[1])) < 1:
-            return True
-    return False
+initial_rules = {'step_size': 1,
+                 'direction': 'diagonal',
+                 'go_back': False,
+                 'add_piece': False,
+                 'rotate_board': False,  # queen_is_born
+                 'num_of_moves': 1}
 
 
 def pieces_in_row(row, brd):
-    pieces = [sqr.piece for sqr in brd.squares[row] if sqr.piece is not None]
-    return len(pieces)
+    return len([sqr for sqr in brd.squares[row] if sqr.piece is not None])
 
 
-# move-testing functions
-def normal_move(sqr1, sqr2):
-    if sqr2.piece is None:
-        if is_higher_than(sqr1, sqr2) * sqr1.piece.color == -1:  # if the higher piece is black
-            if distance(sqr1, sqr2) == step_size and direction(sqr1, sqr2) == direc:
-                return True
-    return False
+def decide_direc(rules_board):
+    options = ['diagonal', 'straight']
+    return options[pieces_in_row(0, rules_board) % 2]
 
 
-def eating_move(sqr1, sqr2, brd):
-    if sqr2.piece is None:
-        if is_higher_than(sqr1, sqr2) * sqr1.piece.color == -1:  # if the higher piece is black
-            if distance(sqr1, sqr2) <= step_size + 1 and direction(sqr1, sqr2) == direc:
-                betweens =[sqr for sqr in brd.all_squares() if between(sqr1, sqr2, sqr)]
-                if any([sqr.piece.color * sqr1.piece.color == -1 for sqr in betweens if sqr.piece is not None]):
-                    return True
-    return False
+def update_rules(rules_board):
+    rules_dic = {'step_size': 5 - pieces_in_row(7, rules_board),
+                 'direction': decide_direc(rules_board),
+                 'go_back': False,
+                 'add_piece': False,
+                 'rotate_board': False,  # queen_is_born
+                 'num_of_moves': 1}  # sqrt(middle_rows + 1)
+    return rules_dic
 
 
-def legal_moves_2(sqr1, brd):
-    normal_moves = [sqr for sqr in brd.all_squares() if normal_move(sqr1, sqr)]
-    eating_moves = [sqr for sqr in brd.all_squares() if eating_move(sqr1, sqr, brd)]
-    return normal_moves, eating_moves
-
-
-rules = {'dist': lambda sqr1, sqr2: step_size == distance(sqr1, sqr2),
-         'direc': lambda sqr1, sqr2: direc == direction(sqr1, sqr2),
-         'forward': lambda sqr1, sqr2: is_higher_than(sqr1, sqr2) != sqr1.piece.color
-                                                if sqr1.piece is not None else None,
-         'empty': lambda sqr1, sqr2: True if sqr2.piece is None else False}
-
-
-def legal_move(sqr1, sqr2):
-    if sqr1.piece is None:
-        return False
-    is_legal = True
-    for rule in rules:
-        if not rules[rule](sqr1, sqr2):
-            is_legal = False
-            break
-    return is_legal
+# measuring functions
